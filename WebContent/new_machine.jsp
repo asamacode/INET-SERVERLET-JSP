@@ -63,8 +63,7 @@
 						<div class="dropdown-menu"
 							aria-labelledby="navbarDropdownMenuLink">
 							<a class="dropdown-item" href="./machine?action=use">Sử Dụng Máy</a>
-							<a class="dropdown-item" href="./service?action=use">Sử Dụng
-								Dịch Vụ</a>
+							<a class="dropdown-item" href="./service?action=use">Sử Dụng Dịch Vụ</a>
 						</div></li>
 				</ul>
 			</div>

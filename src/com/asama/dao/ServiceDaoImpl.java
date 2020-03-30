@@ -7,34 +7,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.asama.model.ComputerMachine;
+import com.asama.model.Service;
 import com.asama.utils.DbUtils;
 
-public class MachineDaoImpl implements MachineDao {
+public class ServiceDaoImpl implements ServiceDao {
 
-	Connection connection = null;
-	ResultSet resultSet;
-	PreparedStatement preparedStatement;
+	private Connection connection = null;
+	private ResultSet resultSet;
+	private PreparedStatement preparedStatement;
 
 	@Override
-	public List<ComputerMachine> getListComputerMachines() {
-		List<ComputerMachine> list = new ArrayList<ComputerMachine>();
-		ComputerMachine computerMachine = null;
-		String query = "SELECT * FROM MAY";
+	public List<String> getListServiceName() {
+		String query = "SELECT * FROM DICHVU";
+		List<String> list = new ArrayList<String>();
+
 		try {
 			connection = DbUtils.getConnection();
 			preparedStatement = connection.prepareStatement(query);
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				computerMachine = new ComputerMachine();
-				computerMachine.setCode(resultSet.getString("MaMay"));
-				computerMachine.setPosition(resultSet.getString("ViTri"));
-				computerMachine.setStatus(resultSet.getBoolean("TrangThai"));
-				list.add(computerMachine);
+				list.add(resultSet.getString("MaDV"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 		} finally {
 			if (resultSet != null) {
 				try {
@@ -48,16 +43,52 @@ public class MachineDaoImpl implements MachineDao {
 				} catch (SQLException e) {
 				}
 			}
-
 		}
-
 		return list;
 	}
 
 	@Override
-	public ComputerMachine getComputerMachine(String code) {
-		ComputerMachine computerMachine = null;
-		String query = "SELECT * FROM MAY WHERE MaMay = ?";
+	public List<Service> getListServices() {
+		String query = "SELECT * FROM DICHVU";
+		List<Service> list = new ArrayList<Service>();
+		Service service = null;
+
+		try {
+			connection = DbUtils.getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				service = new Service();
+				service.setCode(resultSet.getString("MaMay"));
+				service.setName(resultSet.getNString("TenMay"));
+				service.setPrice(resultSet.getFloat("DonGia"));
+				service.setUnit(resultSet.getNString("DonViTinh"));
+
+				list.add(service);
+			}
+		} catch (SQLException e) {
+		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+				}
+			}
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public Service getSingleService(String code) {
+		Service service = null;
+		String query = "SELECT * FROM DICHVU WHERE MaDV = ?";
 		try {
 			connection = DbUtils.getConnection();
 			preparedStatement = connection.prepareStatement(query);
@@ -65,10 +96,11 @@ public class MachineDaoImpl implements MachineDao {
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				computerMachine = new ComputerMachine();
-				computerMachine.setCode(code);
-				computerMachine.setPosition(resultSet.getString("ViTri"));
-				computerMachine.setStatus(resultSet.getBoolean("TrangThai"));
+				service = new Service();
+				service.setCode(code);
+				service.setName(resultSet.getNString("TenDV"));
+				service.setPrice(resultSet.getFloat("DonGia"));
+				service.setUnit(resultSet.getNString("DonViTinh"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -88,21 +120,21 @@ public class MachineDaoImpl implements MachineDao {
 
 		}
 
-		return computerMachine;
+		return service;
 	}
 
 	@Override
-	public boolean insertComputerMachine(ComputerMachine computerMachine) {
-
+	public boolean insertService(Service service) {
 		boolean flag = false;
-		String query = "INSERT INTO MAY VALUES (?,?,?)";
+		String query = "INSERT INTO SERVICE VALUES (?,?,?,?)";
 
 		try {
 			connection = DbUtils.getConnection();
 			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, computerMachine.getCode());
-			preparedStatement.setString(2, computerMachine.getPosition());
-			preparedStatement.setBoolean(3, computerMachine.getStatus());
+			preparedStatement.setString(1, service.getCode());
+			preparedStatement.setNString(2, service.getName());
+			preparedStatement.setNString(3, service.getUnit());
+			preparedStatement.setFloat(4, service.getPrice());
 
 			flag = preparedStatement.executeUpdate() != 0;
 
@@ -122,9 +154,38 @@ public class MachineDaoImpl implements MachineDao {
 	}
 
 	@Override
-	public boolean deleteComputerMachine(String code) {
+	public boolean updateService(Service service) {
 		boolean flag = false;
-		String query = "DELETE FROM MAY WHERE MaMay = ?";
+		String query = "UPDATE DICHVU SET TenDV = ?, DonViTinh = ?, DonGia = ? WHERE MaDV = ?";
+
+		try {
+			connection = DbUtils.getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setNString(1, service.getName());
+			preparedStatement.setNString(2, service.getUnit());
+			preparedStatement.setFloat(3, service.getPrice());
+
+			flag = preparedStatement.executeUpdate() != 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+				}
+			}
+
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean deleteService(String code) {
+		boolean flag = false;
+		String query = "DELETE FROM DICHVU WHERE MaDV = ?";
 
 		try {
 			connection = DbUtils.getConnection();
@@ -146,68 +207,6 @@ public class MachineDaoImpl implements MachineDao {
 		}
 
 		return flag;
-	}
-
-	@Override
-	public boolean updateComputerMachine(ComputerMachine computerMachine) {
-		boolean flag = false;
-		String query = "UPDATE MAY SET ViTri = ?, TrangThai = ? WHERE MaMay = ?";
-
-		try {
-			connection = DbUtils.getConnection();
-			preparedStatement = connection.prepareStatement(query);
-			preparedStatement.setString(1, computerMachine.getPosition());
-			preparedStatement.setBoolean(2, computerMachine.getStatus());
-			preparedStatement.setString(3, computerMachine.getCode());
-
-			flag = preparedStatement.executeUpdate() != 0;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-
-			if (preparedStatement != null) {
-				try {
-					preparedStatement.close();
-				} catch (SQLException e) {
-				}
-			}
-
-		}
-		return flag;
-	}
-
-	@Override
-	public List<String> getListFreeMachine() {
-		List<String> list = new ArrayList<>();
-		String query = "SELECT * FROM MAY WHERE TrangThai = 0";
-		try {
-			connection = DbUtils.getConnection();
-			preparedStatement = connection.prepareStatement(query);
-			resultSet = preparedStatement.executeQuery();
-
-			while (resultSet.next()) {
-				list.add(resultSet.getString("MaMay"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (resultSet != null) {
-				try {
-					resultSet.close();
-				} catch (SQLException e) {
-				}
-			}
-			if (preparedStatement != null) {
-				try {
-					preparedStatement.close();
-				} catch (SQLException e) {
-				}
-			}
-
-		}
-
-		return list;
 	}
 
 }

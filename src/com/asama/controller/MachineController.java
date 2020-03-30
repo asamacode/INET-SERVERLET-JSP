@@ -88,10 +88,8 @@ public class MachineController extends HttpServlet {
 			computerMachine.setStatus(false);
 
 			if (machineDao.insertComputerMachine(computerMachine)) {
-				System.out.println("vao dung");
 				request.setAttribute("NOTIFICATION", "Thêm thành công");
 			} else {
-				System.out.println("vao sai");
 				request.setAttribute("NOTIFICATION", "Thêm thất bại :((");
 			}
 		}
