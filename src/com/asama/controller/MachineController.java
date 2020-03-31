@@ -1,6 +1,8 @@
 package com.asama.controller;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -15,6 +17,8 @@ import com.asama.dao.CustomerDaoImpl;
 import com.asama.dao.MachineDao;
 import com.asama.dao.MachineDaoImpl;
 import com.asama.model.ComputerMachine;
+import com.asama.model.UsedMachine;
+import com.asama.utils.INetUtils;
 
 @WebServlet("/machine")
 public class MachineController extends HttpServlet {
@@ -54,11 +58,31 @@ public class MachineController extends HttpServlet {
 			break;
 		}
 	}
-	
-	private void getUseMachine(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	private void requestUseMachine(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String customerId = request.getParameter("customerId");
+		String machineCode = request.getParameter("machineCode");
+		Date startDate = INetUtils.str2Date(request.getParameter("start_date"));
+		Time startTime = INetUtils.str2Time(request.getParameter("start_time"));
+		int useTime = Integer.parseInt(request.getParameter("use_time"));
+
+		UsedMachine usedMachine = new UsedMachine(customerId, machineCode, startDate, startTime, useTime);
+
+		if (machineDao.insertUsedMachine(usedMachine)) {
+			machineDao.setUsedMachine(machineCode);
+			request.setAttribute("NOTIFICATION", "Đăng ký sử dụng thành công");
+		} else {
+			request.setAttribute("NOTIFICATION", "Đăng ký sử dụng thất bại");
+		}
+		getUseMachine(request, response);
+	}
+
+	private void getUseMachine(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		List<String> listMachineCode = machineDao.getListFreeMachine();
 		List<String> listCustomerName = customerDao.getListCustomerId();
-		
+
 		request.setAttribute("listMachine", listMachineCode);
 		request.setAttribute("listCustomer", listCustomerName);
 		dispatcher = request.getRequestDispatcher("use_machine.jsp");
@@ -77,14 +101,17 @@ public class MachineController extends HttpServlet {
 	private void saveMachine(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String code = request.getParameter("code");
+		String pos = request.getParameter("postion");
 
 		ComputerMachine computerMachine = new ComputerMachine();
 
-		if (code == null) {
+		if (code == null || code.length() < 5) {
 			request.setAttribute("NOTIFICATION", "Vui lòng nhập đầy đủ thông tin");
+		} else if (pos == null || pos.length() < 1) {
+			request.setAttribute("NOTIFICATION", "Vui lòng nhập vị trí");
 		} else {
 			computerMachine.setCode(code);
-			computerMachine.setPosition(request.getParameter("postion"));
+			computerMachine.setPosition(pos);
 			computerMachine.setStatus(false);
 
 			if (machineDao.insertComputerMachine(computerMachine)) {
@@ -143,7 +170,7 @@ public class MachineController extends HttpServlet {
 			throws ServletException, IOException {
 		String code = request.getParameter("code");
 		machineDao.deleteComputerMachine(code);
-		
+
 		dispatcher = request.getRequestDispatcher("list_machine.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -168,6 +195,9 @@ public class MachineController extends HttpServlet {
 			break;
 		case "delete":
 			deleteMachine(request, response);
+			break;
+		case "use":
+			requestUseMachine(request, response);
 			break;
 		default:
 			getListComputerMachines(request, response);

@@ -85,17 +85,17 @@
 
 		<div class="row">
 			<div class="col">
-				<a href="./machine/action?=add"
+				<a href="./machine?action=add"
 					class="btn btn-outline-info btn-block btn-lg d-flex align-items-center"
 					role="button"> Tạo Máy Mới</a>
 			</div>
 			<div class="col">
-				<a href="./customer/action?=add" role="button"
+				<a href="./customer?action=add" role="button"
 					class="btn btn-outline-info btn-block btn-lg d-flex align-items-center">Thêm
 					Mới Khách Hàng</a>
 			</div>
 			<div class="col">
-				<a href="./service/action?=add" role="button"
+				<a href="./service?action=add" role="button"
 					class="btn btn-outline-info btn-block btn-lg d-flex align-items-center">Tạo
 					Mới Dịch Vụ</a>
 			</div>

@@ -10,6 +10,8 @@ public interface CustomerDao {
 
 	List<Customer> getListCustomers();
 	
+	List<Customer> filterListByName(String name);
+	
 	Customer getSingleCustomer(String id);
 	
 	boolean insertCustomer(Customer customer);

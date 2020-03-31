@@ -80,11 +80,11 @@
 				<div class="card">
 					<h3>Đăng ký sử dụng máy:</h3>
 					<br>
-					<form action="/action_page.php">
+					<form action="${pageContext.request.contextPath}/machine?action=use" method="post">
 						<div class="row">
 							<div class="col">
 								<div class="form-group">
-									<label for="text">Mã máy:</label> <select class="form-control">
+									<label for="text">Mã máy:</label> <select class="form-control" name="machineCode">
 									<c:forEach items="${listMachine}" var="machine">
 										<option>${machine}</option>
 										</c:forEach>
@@ -93,7 +93,7 @@
 							</div>
 							<div class="col">
 								<div class="form-group">
-									<label for="text">Mã khách hàng:</label> <select
+									<label for="text">Mã khách hàng:</label> <select name="customerId"
 										class="form-control">
 										<c:forEach items="${listCustomer}" var="customer">
 										<option>${customer}</option>
@@ -103,15 +103,15 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="text">Ngày sử dụng:</label> <input id="datepicker"
-								width="270" placeholder="Chọn ngày" />
+							<label for="text">Ngày sử dụng:</label> <input id="datepicker" name="start_date"
+								width="270" placeholder="Chọn ngày" onchange="validateDate(this);"/>
 						</div>
 						<div class="form-group">
-							<label for="money">Giờ sử dụng:</label> <input id="timepicker"
-								width="276" placeholder="Chọn giờ" />
+							<label for="money">Giờ sử dụng:</label> <input id="timepicker" name="start_time"
+								width="276" placeholder="Chọn giờ" onchange="validateHhMm(this);" />
 						</div>
 						<div class="form-group">
-							<label for="time">Thời gian:</label> <input type="number"
+							<label for="time">Thời gian:</label> <input type="number" name="use_time"
 								placeholder="Nhập thời gian" class="form-control col-md-5"
 								id="time" onchange="validateUseTime(this);" />
 						</div>

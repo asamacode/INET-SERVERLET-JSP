@@ -9,7 +9,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 <%@
-include file ="css/bootstrap.min.css" %> .card {
+include file ="css/bootstrap.min.css" %> 
+.card {
 	margin-top: 50px;
 	padding: 50px;
 }
@@ -79,35 +80,34 @@ include file ="css/bootstrap.min.css" %> .card {
 				<div class="card">
 					<h3>Thêm dịch vụ:</h3>
 					<br>
-					<form action="" method="POST">
+					<p>${NOTIFICATION}</p>
+					<form action="${pageContext.request.contextPath}/service?action=add" method="POST">
 						<div class="row">
 							<div class="col">
 								<div class="form-group">
 									<label for="text">Mã dịch vụ:</label> <input type="text"
 										class="form-control" placeholder="Nhập vào mã dịch vụ"
-										id="makh" onchange="validateMaDV(this);">
+										name="service_code" onchange="validateMaDV(this);">
 								</div>
 							</div>
 							<div class="col">
 								<div class="form-group">
 									<label for="text">Đơn vị tính:</label> <input type="text"
-										class="form-control" placeholder="Nhập vào đơn vị tính"
-										id="email">
+										class="form-control" placeholder="Nhập vào đơn vị tính" name="service_unit">
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="text">Tên dịch vụ:</label> <input type="text"
 								class="form-control" placeholder="Nhập vào tên dịch vụ"
-								id="email">
+								name="service_name">
 						</div>
 						<div class="form-group">
 							<label for="price">Đơn giá:</label> <input type="number"
 								class="form-control" placeholder="Nhập vào đơn giá" min="1"
-								onchange="validateQuantity(this);" id="price">
+								onchange="validateQuantity(this);" name="service_price">
 						</div>
-						<button type="submit" class="btn btn-primary" id="btn_register">Tạo
-							mới</button>
+						<button type="submit" class="btn btn-primary" id="btn_register">Tạo mới</button>
 					</form>
 				</div>
 			</div>

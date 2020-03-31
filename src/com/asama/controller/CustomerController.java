@@ -14,19 +14,18 @@ import com.asama.dao.CustomerDao;
 import com.asama.dao.CustomerDaoImpl;
 import com.asama.model.Customer;
 
-
 @WebServlet("/customer")
 public class CustomerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RequestDispatcher dispatcher;
-    private CustomerDao customerDao;
-    
-    public CustomerController() {
-       customerDao = new CustomerDaoImpl();
-    }
+	private CustomerDao customerDao;
 
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public CustomerController() {
+		customerDao = new CustomerDaoImpl();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getParameter("action");
 
 		if (action == null) {
@@ -42,12 +41,15 @@ public class CustomerController extends HttpServlet {
 		case "list":
 			getListCustomer(request, response);
 			break;
+		case "search":
+			searchCustomer(request, response);
+			break;
 		default:
 			getListCustomer(request, response);
 			break;
 		}
 	}
-	
+
 	private void getListCustomer(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		List<Customer> customers = customerDao.getListCustomers();
@@ -60,17 +62,29 @@ public class CustomerController extends HttpServlet {
 	private void saveCustomer(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String id = request.getParameter("customer_id");
+		String name = request.getParameter("name");
+		String addr = request.getParameter("address");
+		String phone = request.getParameter("customer_phone");
+		String email = request.getParameter("customer_email");
 
 		Customer customer = new Customer();
 
-		if (id == null) {
+		if (id == null || id.length() < 7) {
 			request.setAttribute("NOTIFICATION", "Vui lòng nhập đầy đủ thông tin");
+		} else if (name == null || name.length() < 8) {
+			request.setAttribute("NOTIFICATION", "Họ tên phải trên 8 ký tự");
+		} else if (addr == null || addr.length() < 15) {
+			request.setAttribute("NOTIFICATION", "Địa chỉ phải trên 15 ký tự");
+		} else if (phone == null || phone.length() < 10 || phone.length() > 11) {
+			request.setAttribute("NOTIFICATION", "Số điện thoại không hợp lệ");
+		} else if (email == null || email.length() < 5) {
+			request.setAttribute("NOTIFICATION", "Email không hợp lệ");
 		} else {
 			customer.setId(id);
-			customer.setName(request.getParameter("name"));
-			customer.setAddress(request.getParameter("address"));
-			customer.setPhone(request.getParameter("customer_phone"));
-			customer.setEmail(request.getParameter("customer_email"));
+			customer.setName(name);
+			customer.setAddress(addr);
+			customer.setPhone(phone);
+			customer.setEmail(email);
 
 			if (customerDao.insertCustomer(customer)) {
 				request.setAttribute("NOTIFICATION", "Thêm thành công");
@@ -128,13 +142,13 @@ public class CustomerController extends HttpServlet {
 			throws ServletException, IOException {
 		String id = request.getParameter("customer_id");
 		customerDao.deleteCustomer(id);
-		
+
 		dispatcher = request.getRequestDispatcher("list_customer.jsp");
 		dispatcher.forward(request, response);
 	}
 
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		if (request.getCharacterEncoding() == null) {
 			request.setCharacterEncoding("utf-8");
 		}
@@ -153,10 +167,28 @@ public class CustomerController extends HttpServlet {
 		case "delete":
 			deleteCustomer(request, response);
 			break;
+		case "search":
+			searchCustomer(request, response);
+			break;
 		default:
 			getListCustomer(request, response);
 			break;
 		}
+	}
+
+	private void searchCustomer(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String name = request.getParameter("q");
+
+		if (name != null) {
+			List<Customer> customers = customerDao.filterListByName(name);
+			request.setAttribute("listCustomer", customers);
+
+			dispatcher = request.getRequestDispatcher("list_customer.jsp");
+			dispatcher.forward(request, response);
+		}
+
 	}
 
 }

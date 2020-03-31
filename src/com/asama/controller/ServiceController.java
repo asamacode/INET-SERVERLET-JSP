@@ -150,16 +150,21 @@ public class ServiceController extends HttpServlet {
 	
 	private void saveService(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String code = request.getParameter("code");
-
+		String code = request.getParameter("service_code");
+		String name = request.getParameter("service_name");
+		Float price = Float.valueOf(request.getParameter("service_price"));
 		Service service = new Service();
 
-		if (code == null) {
+		if (code == null || code.length() < 5) {
 			request.setAttribute("NOTIFICATION", "Vui lòng nhập đầy đủ thông tin");
+		} else if (name == null || name.length() < 5) {
+			request.setAttribute("NOTIFICATION", "Tên dịch vụ phải trên 5 ký tự");
+		} else if (price == null || price < 1000) {
+			request.setAttribute("NOTIFICATION", "Giá dịch vụ phải lớn hơn 1000");
 		} else {
 			service.setCode(code);
-			service.setName(request.getParameter("service_name"));
-			service.setPrice(Float.valueOf(request.getParameter("service_price")));
+			service.setName(name);
+			service.setPrice(price);
 			service.setUnit(request.getParameter("service_unit"));
 
 			if (serviceDao.insertService(service)) {

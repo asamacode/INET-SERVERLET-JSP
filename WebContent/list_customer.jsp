@@ -12,6 +12,7 @@
 <%@include file="css/bootstrap.min.css" %>
 </style>
 </head>
+<base href="${pageContext.request.contextPath}/" />
 <!-- Header -->
 <header>
 	<div class="container">
@@ -76,11 +77,11 @@
 				<p>Tìm kiếm thông tin khách hàng:</p>
 			</div>
 			<div class="col-sm-4">
-				<form class="form-inline">
-					<input class="form-control mr-sm-2" type="search"
-						placeholder="Nhập tên khách hàng" aria-label="Search">
-					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm
-						kiếm</button>
+				<form class="form-inline" action="customer" method="get">
+				<input type="hidden" name="action" value = "search">
+					<input class="form-control mr-sm-2"
+						placeholder="Nhập tên khách hàng" name="q">
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm kiếm</button>
 				</form>
 			</div>
 		</div>
@@ -105,7 +106,7 @@
 						<td>${customer.phone}</td>
 						<td>${customer.email}</td>
 						<td><a
-							href="${pageContext.request.contextPath}/customer?action=edit&customer_id=${customer.id}"
+							href="customer?action=edit&customer_id=${customer.id}"
 							class="btn btn-outline-primary">Chỉnh sửa</a></td>
 						<td><button class="btn btn-outline-danger"
 								onclick="showModal(this);">Xóa</button></td>

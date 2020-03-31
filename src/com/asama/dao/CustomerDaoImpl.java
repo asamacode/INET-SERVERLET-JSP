@@ -214,4 +214,32 @@ public class CustomerDaoImpl implements CustomerDao {
 		return list;
 	}
 
+	@Override
+	public List<Customer> filterListByName(String name) {
+		String query = "SELECT * FROM KHACHHANG WHERE TenKH LIKE N'% "+ name +"'";
+		List<Customer> list = new ArrayList<>();
+		Customer customer = null;
+		try {
+			connection = DbUtils.getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next()) {
+				customer = new Customer();
+				customer.setId(resultSet.getString("MaKH"));
+				customer.setName(resultSet.getNString("TenKH"));
+				customer.setAddress(resultSet.getNString("DiaChi"));
+				customer.setEmail(resultSet.getString("DiaChiEmail"));
+				customer.setPhone(resultSet.getString("SoDienThoai"));
+				
+				list.add(customer);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 }

@@ -60,8 +60,8 @@ public class ServiceDaoImpl implements ServiceDao {
 
 			while (resultSet.next()) {
 				service = new Service();
-				service.setCode(resultSet.getString("MaMay"));
-				service.setName(resultSet.getNString("TenMay"));
+				service.setCode(resultSet.getString("MaDV"));
+				service.setName(resultSet.getNString("TenDV"));
 				service.setPrice(resultSet.getFloat("DonGia"));
 				service.setUnit(resultSet.getNString("DonViTinh"));
 
@@ -126,7 +126,7 @@ public class ServiceDaoImpl implements ServiceDao {
 	@Override
 	public boolean insertService(Service service) {
 		boolean flag = false;
-		String query = "INSERT INTO SERVICE VALUES (?,?,?,?)";
+		String query = "INSERT INTO DICHVU VALUES (?,?,?,?)";
 
 		try {
 			connection = DbUtils.getConnection();

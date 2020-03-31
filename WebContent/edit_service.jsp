@@ -1,14 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 
 <head>
-<title>Chỉnh sửa thông tin máy</title>
+<title>Chỉnh sửa dịch vụ</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-<%@include file="css/bootstrap.min.css" %>
+<%@
+include file ="css/bootstrap.min.css" %> 
 .card {
 	margin-top: 50px;
 	padding: 50px;
@@ -28,10 +29,10 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
-					<li class="nav-item "><a class="nav-link"
+					<li class="nav-item"><a class="nav-link"
 						href="./">Trang Chủ <span class="sr-only">(current)</span></a>
 					</li>
-					<li class="nav-item dropdown"><a
+					<li class="nav-item dropdown active"><a
 						class="nav-link dropdown-toggle" href="#"
 						id="navbarDropdownMenuLink" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false"> Tạo Mới </a>
@@ -42,7 +43,7 @@
 								Khách Hàng</a> <a class="dropdown-item" href="./service?action=add">Tạo
 								Mới Dịch Vụ</a>
 						</div></li>
-					<li class="nav-item dropdown active"><a
+					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#"
 						id="navbarDropdownMenuLink" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false"> Liệt Kê </a>
@@ -75,40 +76,38 @@
 <body>
 	<div class="container">
 		<div class="row justify-content-center">
-			<div class="col-sm-4">
+			<div class="col-sm-8">
 				<div class="card">
-					<h3>Chỉnh sửa</h3>
+					<h3>Chỉnh sửa dịch vụ:</h3>
 					<br>
 					<p>${NOTIFICATION}</p>
-					<form
-						action="${pageContext.request.contextPath}/machine?action=edit"
-						method="post">
-						<div class="form-group">
-							<label for="code">Mã máy:</label> <input type="text"
-								class="form-control" placeholder="Nhập vào mã máy" name="code"
-								value="${computer.code}" readonly="readonly">
+					<form action="${pageContext.request.contextPath}/service?action=edit" method="POST">
+						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<label for="text">Mã dịch vụ:</label> <input type="text"
+										class="form-control" placeholder="Nhập vào mã dịch vụ" value="${service.code}"
+										name="service_code" onchange="validateMaDV(this);" readonly="readonly">
+								</div>
+							</div>
+							<div class="col">
+								<div class="form-group">
+									<label for="text">Đơn vị tính:</label> <input type="text" value="${service.unit}"
+										class="form-control" placeholder="Nhập vào đơn vị tính" name="service_unit">
+								</div>
+							</div>
 						</div>
 						<div class="form-group">
-							<label for="pos">Vị trí:</label> <input type="text"
-								class="form-control" placeholder="Nhập vào vị trí máy" id="pos"
-								name="postion" value="${computer.position}">
+							<label for="text">Tên dịch vụ:</label> <input type="text" value="${service.name}"
+								class="form-control" placeholder="Nhập vào tên dịch vụ"
+								name="service_name">
 						</div>
 						<div class="form-group">
-							<label for="text">Trạng thái:</label> <select name="status"
-								class="form-control">
-								<c:choose>
-									<c:when test="${computer.status}">
-										<option selected="selected">Hoạt động</option>
-										<option>Tắt</option>
-									</c:when>
-									<c:otherwise>
-										<option>Hoạt động</option>
-										<option selected="selected">Tắt</option>
-									</c:otherwise>
-								</c:choose>
-							</select>
+							<label for="price">Đơn giá:</label> <input type="number" value="${service.price}"
+								class="form-control" placeholder="Nhập vào đơn giá" min="1"
+								onchange="validateQuantity(this);" name="service_price">
 						</div>
-						<button type="submit" class="btn btn-primary">Lưu lại</button>
+						<button type="submit" class="btn btn-primary" id="btn_register">Lưu lại</button>
 					</form>
 				</div>
 			</div>
@@ -116,6 +115,5 @@
 	</div>
 </body>
 <div id="footer"><jsp:include page="footer.jsp"></jsp:include></div>
-
 
 </html>

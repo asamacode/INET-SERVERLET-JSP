@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.asama.model.ComputerMachine;
+import com.asama.model.UsedMachine;
 import com.asama.utils.DbUtils;
 
 public class MachineDaoImpl implements MachineDao {
@@ -208,6 +209,48 @@ public class MachineDaoImpl implements MachineDao {
 		}
 
 		return list;
+	}
+
+	@Override
+	public List<ComputerMachine> filterListByName(String name) {
+		
+		return null;
+	}
+
+	@Override
+	public boolean insertUsedMachine(UsedMachine usedMachine) {
+		boolean flag = false;
+		String query = "INSERT INTO SUDUNGMAY VALUES (?,?,?,?,?)"; 
+		
+		try {
+			connection = DbUtils.getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, usedMachine.getCustomerId());
+			preparedStatement.setString(2, usedMachine.getMachineCode());
+			preparedStatement.setDate(3, usedMachine.getStartDate());
+			preparedStatement.setTime(4, usedMachine.getStartTime());
+			preparedStatement.setInt(5, usedMachine.getUseTime());
+			
+			flag = preparedStatement.executeUpdate() != 0;
+		} catch (SQLException e) {
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean setUsedMachine(String code) {
+		boolean flag = false;
+		String query = "UPDATE MAY SET TrangThai = 1 WHERE MaMay = ?";
+		
+		connection = DbUtils.getConnection();
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, code);
+			
+			flag = preparedStatement.executeUpdate() != 0;
+		} catch (SQLException e) {
+		}
+		return flag;
 	}
 
 }

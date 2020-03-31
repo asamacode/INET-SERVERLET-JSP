@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 
@@ -95,30 +96,17 @@
                 </tr>
             </thead>
             <tbody>
+            <c:forEach items="${listService}" var="service">
                 <tr>
-                    <td>DV001</td>
-                    <td>Mì tôm</td>
-                    <td>Gói</td>
-                    <td>10.000</td>
-                    <td><button class="btn btn-outline-primary" >Chỉnh sửa</button></td>
+                    <td>${service.code}</td>
+                    <td>${service.name}</td>
+                    <td>${service.unit}</td>
+                    <td id="price">${service.price}</td>
+                    <td><a href="${pageContext.request.contextPath}/service?action=edit&code=${service.code}"
+							class="btn btn-outline-primary">Chỉnh sửa</a></td>
                     <td><button class="btn btn-outline-danger"  onclick="showModal(this);">Xóa</button></td>
                 </tr>
-                <tr>
-                    <td>DV002</td>
-                    <td>Mì tôm</td>
-                    <td>Gói</td>
-                    <td>10.000</td>
-                    <td><button class="btn btn-outline-primary" >Chỉnh sửa</button></td>
-                    <td><button class="btn btn-outline-danger"  onclick="showModal(this);">Xóa</button></td>
-                </tr>
-                <tr>
-                    <td>DV003</td>
-                    <td>Mì tôm</td>
-                    <td>Gói</td>
-                    <td>10.000</td>
-                    <td><button class="btn btn-outline-primary" >Chỉnh sửa</button></td>
-                    <td><button class="btn btn-outline-danger"  onclick="showModal(this);">Xóa</button></td>
-                </tr>
+            </c:forEach>
             </tbody>
         </table>
 
@@ -175,9 +163,40 @@
     }
 
     function deleteRow() {
+    	var code = $('tr.selected').data("code");
         $('tr.selected').remove();
         $('.modal').modal('toggle');
-    }
+        
+        $.ajax({
+            type: "post",
+            url: "service", 
+            data: {
+            	action: "delete",
+            	code: code
+            },
+            success: function(msg){     
+            	
+            },
+            error: function() {
+    
+            }
+        });
+</script>
+<script>
+    $(document).ready(function () {
+        // Get all the elements into an array
+        let cells = Array.prototype.slice.call(document.querySelectorAll("#price"));
+
+        // Loop over the array
+        cells.forEach(function (cell) {
+            // Convert cell data to a number, call .toLocaleString()
+            // on that number and put result back into the cell
+            cell.textContent = (+cell.textContent).toLocaleString('en-US', { style: 'currency', currency: 'VND' });
+        });
+
+    });
+
+
 </script>
 
 
