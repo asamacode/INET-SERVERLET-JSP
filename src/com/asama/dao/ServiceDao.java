@@ -3,6 +3,7 @@ package com.asama.dao;
 import java.util.List;
 
 import com.asama.model.Service;
+import com.asama.model.UsedService;
 
 public interface ServiceDao {
 	
@@ -17,4 +18,6 @@ public interface ServiceDao {
 	boolean updateService(Service service);
 	
 	boolean deleteService(String code);
+	
+	boolean saveUsedService(UsedService usedService);
 }

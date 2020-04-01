@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 
@@ -80,45 +80,42 @@
 				<div class="card">
 					<h3>Đăng ký dịch vụ:</h3>
 					<br>
-					<form action="">
+					<p>${NOTIFICATION}</p>
+					<form action="${pageContext.request.contextPath}/service?action=use" method="post">
 						<div class="row">
 							<div class="col">
 								<div class="form-group">
-									<label for="text">Mã dịch vụ:</label> <select
+									<label for="text">Mã dịch vụ:</label> <select name="service_code"
 										class="form-control">
-										<option>DV001</option>
-										<option>DV002</option>
-										<option>DV003</option>
-										<option>DV004</option>
-										<option>DV005</option>
+										<c:forEach items="${listService}" var="service">
+										<option>${service}</option>
+										</c:forEach>
 									</select>
 								</div>
 							</div>
 							<div class="col">
 								<div class="form-group">
-									<label for="text">Mã khách hàng:</label> <select
+									<label for="text">Mã khách hàng:</label> <select name="customer_id"
 										class="form-control">
-										<option>KH00001</option>
-										<option>KH00002</option>
-										<option>KH00003</option>
-										<option>KH00004</option>
-										<option>KH00005</option>
+										<c:forEach items="${listCustomer}" var="customer">
+										<option>${customer}</option>
+										</c:forEach>
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="text">Ngày sử dụng:</label> <input id="datepicker"
+							<label for="text">Ngày sử dụng:</label> <input id="datepicker" name="use_date"
 								width="270" placeholder="Chọn ngày"
 								onchange="validateDate(this);" />
 						</div>
 						<div class="form-group">
-							<label for="money">Giờ sử dụng:</label> <input id="timepicker"
+							<label for="money">Giờ sử dụng:</label> <input id="timepicker" name="use_time"
 								width="276" placeholder="Chọn giờ"
 								onchange="validateHhMm(this);" />
 						</div>
 						<div class="form-group">
-							<label for="money">Số lượng:</label> <input type="number"
+							<label for="money">Số lượng:</label> <input type="number" name="use_quantity"
 								placeholder="Nhập số lượng" class="form-control col-md-5"
 								onchange="validateQuantity(this);" />
 						</div>

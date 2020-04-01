@@ -1,6 +1,8 @@
 package com.asama.controller;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -15,22 +17,24 @@ import com.asama.dao.CustomerDaoImpl;
 import com.asama.dao.ServiceDao;
 import com.asama.dao.ServiceDaoImpl;
 import com.asama.model.Service;
-
+import com.asama.model.UsedService;
+import com.asama.utils.INetUtils;
 
 @WebServlet("/service")
 public class ServiceController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RequestDispatcher dispatcher;
-    private ServiceDao serviceDao;
-    private CustomerDao customerDao;
- 
-    public ServiceController() {
-        super();
-        serviceDao = new ServiceDaoImpl();
-        customerDao = new CustomerDaoImpl();
-    }
+	private ServiceDao serviceDao;
+	private CustomerDao customerDao;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ServiceController() {
+		super();
+		serviceDao = new ServiceDaoImpl();
+		customerDao = new CustomerDaoImpl();
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getParameter("action");
 
 		if (action == null) {
@@ -54,13 +58,13 @@ public class ServiceController extends HttpServlet {
 			break;
 		}
 	}
-	
+
 	private void showAdd(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		dispatcher = request.getRequestDispatcher("new_service.jsp");
 		dispatcher.forward(request, response);
 	}
-	
+
 	private void getServiceInfo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -70,17 +74,18 @@ public class ServiceController extends HttpServlet {
 		dispatcher = request.getRequestDispatcher("edit_service.jsp");
 		dispatcher.forward(request, response);
 	}
-	
-	private void getUseService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	private void getUseService(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		List<String> listServiceCode = serviceDao.getListServiceName();
 		List<String> listCustomerName = customerDao.getListCustomerId();
-		
-		request.setAttribute("listMachine", listServiceCode);
+
+		request.setAttribute("listService", listServiceCode);
 		request.setAttribute("listCustomer", listCustomerName);
 		dispatcher = request.getRequestDispatcher("use_service.jsp");
 		dispatcher.forward(request, response);
 	}
-	
+
 	private void getListServices(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		List<Service> services = serviceDao.getListServices();
@@ -90,7 +95,8 @@ public class ServiceController extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		if (request.getCharacterEncoding() == null) {
 			request.setCharacterEncoding("utf-8");
 		}
@@ -109,17 +115,43 @@ public class ServiceController extends HttpServlet {
 		case "delete":
 			deleteService(request, response);
 			break;
+		case "use":
+			requestUseService(request, response);
+			break;
 		default:
 			getListServices(request, response);
 			break;
 		}
 	}
-	
+
+	private void requestUseService(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String serviceCode = request.getParameter("service_code");
+		String customerId = request.getParameter("customer_id");
+		String useDate = request.getParameter("use_date");
+		String useTime = request.getParameter("use_time");
+		int quantity = Integer.parseInt(request.getParameter("use_quantity"));
+
+		Date date = INetUtils.str2Date(useDate);
+		Time time = INetUtils.str2Time(useTime);
+
+		UsedService usedService = new UsedService(customerId, serviceCode, date, time, quantity);
+
+		if (serviceDao.saveUsedService(usedService)) {
+			request.setAttribute("NOTIFICATION", "Đăng ký sử dụng dịch vụ thành công");
+		} else {
+			request.setAttribute("NOTIFICATION", "Đăng ký sử dụng dịch vụ thất bại");
+		}
+
+		getUseService(request, response);
+	}
+
 	private void deleteService(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String code = request.getParameter("code");
 		serviceDao.deleteService(code);
-		
+
 		dispatcher = request.getRequestDispatcher("list_service.jsp");
 		dispatcher.forward(request, response);
 	}
@@ -147,7 +179,7 @@ public class ServiceController extends HttpServlet {
 
 		getServiceInfo(request, response);
 	}
-	
+
 	private void saveService(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String code = request.getParameter("service_code");

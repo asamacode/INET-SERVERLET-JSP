@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.asama.model.Service;
+import com.asama.model.UsedService;
 import com.asama.utils.DbUtils;
 
 public class ServiceDaoImpl implements ServiceDao {
@@ -206,6 +207,27 @@ public class ServiceDaoImpl implements ServiceDao {
 
 		}
 
+		return flag;
+	}
+
+	@Override
+	public boolean saveUsedService(UsedService usedService) {
+		boolean flag = false;
+		String query = "INSERT INTO SUDUNGDICHVU VALUES (?,?,?,?,?)"; 
+		
+		try {
+			connection = DbUtils.getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, usedService.getCustomerId());
+			preparedStatement.setString(2, usedService.getServiceCode());
+			preparedStatement.setDate(3, usedService.getUseDate());
+			preparedStatement.setTime(4, usedService.getUseTime());
+			preparedStatement.setInt(5, usedService.getQuantity());
+			
+			flag = preparedStatement.executeUpdate() != 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return flag;
 	}
 

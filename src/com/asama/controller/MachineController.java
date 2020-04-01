@@ -70,7 +70,6 @@ public class MachineController extends HttpServlet {
 		UsedMachine usedMachine = new UsedMachine(customerId, machineCode, startDate, startTime, useTime);
 
 		if (machineDao.insertUsedMachine(usedMachine)) {
-			machineDao.setUsedMachine(machineCode);
 			request.setAttribute("NOTIFICATION", "Đăng ký sử dụng thành công");
 		} else {
 			request.setAttribute("NOTIFICATION", "Đăng ký sử dụng thất bại");

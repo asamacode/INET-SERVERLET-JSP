@@ -80,6 +80,7 @@
 				<div class="card">
 					<h3>Đăng ký sử dụng máy:</h3>
 					<br>
+					<p>${NOTIFICATION}</p>
 					<form action="${pageContext.request.contextPath}/machine?action=use" method="post">
 						<div class="row">
 							<div class="col">

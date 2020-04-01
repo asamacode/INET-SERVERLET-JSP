@@ -231,6 +231,7 @@ public class MachineDaoImpl implements MachineDao {
 			preparedStatement.setTime(4, usedMachine.getStartTime());
 			preparedStatement.setInt(5, usedMachine.getUseTime());
 			
+			setUsedMachine(usedMachine.getMachineCode());
 			flag = preparedStatement.executeUpdate() != 0;
 		} catch (SQLException e) {
 		}
