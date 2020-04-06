@@ -5,10 +5,10 @@ import java.util.List;
 import com.asama.common.INetUtils;
 import com.asama.model.bean.Service;
 import com.asama.model.bean.UsedService;
-import com.asama.model.bean.dao.CustomerDao;
-import com.asama.model.bean.dao.CustomerDaoImpl;
-import com.asama.model.bean.dao.ServiceDao;
-import com.asama.model.bean.dao.ServiceDaoImpl;
+import com.asama.model.dao.CustomerDao;
+import com.asama.model.dao.CustomerDaoImpl;
+import com.asama.model.dao.ServiceDao;
+import com.asama.model.dao.ServiceDaoImpl;
 
 public class ServiceBO {
 

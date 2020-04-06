@@ -3,8 +3,8 @@ package com.asama.model.bo;
 import java.util.List;
 
 import com.asama.model.bean.Customer;
-import com.asama.model.bean.dao.CustomerDao;
-import com.asama.model.bean.dao.CustomerDaoImpl;
+import com.asama.model.dao.CustomerDao;
+import com.asama.model.dao.CustomerDaoImpl;
 
 public class CustomerBO {
 

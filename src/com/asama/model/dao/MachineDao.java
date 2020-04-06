@@ -1,4 +1,4 @@
-package com.asama.model.bean.dao;
+package com.asama.model.dao;
 
 import java.util.List;
 

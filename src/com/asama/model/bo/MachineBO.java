@@ -5,10 +5,10 @@ import java.util.List;
 import com.asama.common.INetUtils;
 import com.asama.model.bean.ComputerMachine;
 import com.asama.model.bean.UsedMachine;
-import com.asama.model.bean.dao.CustomerDao;
-import com.asama.model.bean.dao.CustomerDaoImpl;
-import com.asama.model.bean.dao.MachineDao;
-import com.asama.model.bean.dao.MachineDaoImpl;
+import com.asama.model.dao.CustomerDao;
+import com.asama.model.dao.CustomerDaoImpl;
+import com.asama.model.dao.MachineDao;
+import com.asama.model.dao.MachineDaoImpl;
 
 public class MachineBO {
 
